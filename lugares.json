@@ -1,44 +1,123 @@
 [
   {
-    "nombre": "Juan y Cris",
-    "lat": -34.571528,
-    "lon": -58.433667,
-    "cat": "guarida"
-  },
-  {
-    "nombre": "Jardín Botánico Carlos Thays",
-    "lat": -34.582588,
-    "lon": -58.417292,
-    "cat": "cositas"
-  },
-  {
     "nombre": "Fundación Proa",
     "lat": -34.639602,
     "lon": -58.361869,
-    "cat": "arte"
-  },
-  {
-    "nombre": "CASo - Centro de Arte Sonoro",
-    "lat": -34.597617,
-    "lon": -58.394531,
-    "cat": "arte"
-  },
-  {
-    "nombre": "Escuela de Mecánica de la Armada",
-    "lat": -34.5384,
-    "lon": -58.4636,
-    "cat": "arte"
+    "cat": "galerías"
   },
   {
     "nombre": "Museo de Arte Latinoamericano de Buenos Aires",
     "lat": -34.576903,
     "lon": -58.403396,
-    "cat": "arte"
+    "cat": "galerías"
   },
   {
     "nombre": "Rolf Art",
     "lat": -34.592189,
     "lon": -58.378382,
-    "cat": "arte"
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Ruth Benzacar Galería de Arte",
+    "lat": -34.591292,
+    "lon": -58.442886,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Galería Nora Fisch",
+    "lat": -34.621822,
+    "lon": -58.375774,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Hache",
+    "lat": -34.600415,
+    "lon": -58.431404,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Gachi Prieto Arte Latinoamericano Contemporáneo",
+    "lat": -34.589061,
+    "lon": -58.434381,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Arte X Arte",
+    "lat": -34.596908,
+    "lon": -58.428494,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Galeria Komuna",
+    "lat": -34.601813,
+    "lon": -58.445434,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Galería Acefala",
+    "lat": -34.592622,
+    "lon": -58.430975,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Fundación Cazadores",
+    "lat": -34.591618,
+    "lon": -58.446317,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "ATOCHA Galeria",
+    "lat": -34.590386,
+    "lon": -58.444393,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Quimera Galería",
+    "lat": -34.582424,
+    "lon": -58.422597,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Usina del Arte",
+    "lat": -34.628562,
+    "lon": -58.356958,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Barro",
+    "lat": -34.628748,
+    "lon": -58.359591,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Palacio Libertad, Domingo F. Sarmiento",
+    "lat": -34.603612,
+    "lon": -58.369729,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Ciudad Cultural Konex",
+    "lat": -34.606569,
+    "lon": -58.410534,
+    "cat": "galerías"
+  },
+  {
+    "nombre": "Depa Juan",
+    "lat": -34.57152,
+    "lon": -58.43366,
+    "cat": "basicos"
+  },
+  {
+    "nombre": "Universidad Torcuato Di Tella",
+    "lat": -34.548006,
+    "lon": -58.446944,
+    "cat": "msa"
+  },
+  {
+    "nombre": "Museo Sitio de Memoria ESMA",
+    "lat": -34.536611,
+    "lon": -58.465431,
+    "cat": "galerías",
+    "nota": "mié–sáb 10:00–17:00"
   }
 ]
