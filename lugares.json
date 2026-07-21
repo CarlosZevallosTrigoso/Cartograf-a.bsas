@@ -1,0 +1,44 @@
+[
+  {
+    "nombre": "Juan y Cris",
+    "lat": -34.571528,
+    "lon": -58.433667,
+    "cat": "guarida"
+  },
+  {
+    "nombre": "Jardín Botánico Carlos Thays",
+    "lat": -34.582588,
+    "lon": -58.417292,
+    "cat": "cositas"
+  },
+  {
+    "nombre": "Fundación Proa",
+    "lat": -34.639602,
+    "lon": -58.361869,
+    "cat": "arte"
+  },
+  {
+    "nombre": "CASo - Centro de Arte Sonoro",
+    "lat": -34.597617,
+    "lon": -58.394531,
+    "cat": "arte"
+  },
+  {
+    "nombre": "Escuela de Mecánica de la Armada",
+    "lat": -34.5384,
+    "lon": -58.4636,
+    "cat": "arte"
+  },
+  {
+    "nombre": "Museo de Arte Latinoamericano de Buenos Aires",
+    "lat": -34.576903,
+    "lon": -58.403396,
+    "cat": "arte"
+  },
+  {
+    "nombre": "Rolf Art",
+    "lat": -34.592189,
+    "lon": -58.378382,
+    "cat": "arte"
+  }
+]
