@@ -119,5 +119,33 @@
     "lon": -58.465431,
     "cat": "galerías",
     "nota": "mié–sáb 10:00–17:00"
+  },
+  {
+    "nombre": "La Poesía",
+    "cat": "comida",
+    "hora": "14:00",
+    "lat": -34.616129,
+    "lon": -58.373215
+  },
+  {
+    "nombre": "La Libre",
+    "cat": "comida",
+    "hora": "15:42",
+    "lat": -34.618835,
+    "lon": -58.375906
+  },
+  {
+    "nombre": "Museo de Arte Moderno de Buenos Aires",
+    "cat": "comida",
+    "hora": "16:00",
+    "lat": -34.622066,
+    "lon": -58.370745
+  },
+  {
+    "nombre": "Mercado de San Telmo",
+    "cat": "comida",
+    "hora": "17:00",
+    "lat": -34.619049,
+    "lon": -58.372512
   }
 ]

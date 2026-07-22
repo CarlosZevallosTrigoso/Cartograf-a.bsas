@@ -238,6 +238,9 @@ const CAT_COLOR = {
   'basicos':'#6f8ba3', 'galerías':'#b06a36', 'msa':'#8fa676',
   'café':'#c08a5a', 'comida':'#d8d6c4', 'otro':'#8a8c78'
 };
+// color por origen: verde = pineado por mí (tiene hora), azul = de antes
+const PIN_VERDE = '#8fa676', PIN_AZUL = '#6f8ba3';
+function colorPin(p){ return p.hora ? PIN_VERDE : PIN_AZUL; }
 const $ = id => document.getElementById(id);
 
 let semilla = [];   // lugares.json del repo
@@ -309,7 +312,7 @@ function pintarLista(){
     }
     const div = document.createElement('div');
     div.className = 'row-l' + (r.esNuevo ? ' nuevo' : '');
-    const col = CAT_COLOR[cat] || CAT_COLOR.otro;
+    const col = colorPin(r.p);
     const dist = pos ? '<span class="dist">'+fmtDist(pos.distanceTo([r.p.lat, r.p.lon]))+'</span>' : '';
     div.innerHTML = '<span class="dot" style="background:'+col+'"></span>'+
       '<span class="nm">'+esc(r.p.nombre)+'</span>' + dist;
@@ -322,7 +325,7 @@ function pintarLista(){
   });
 }
 function marcador(p, esNuevo, idx){
-  const col = CAT_COLOR[p.cat] || CAT_COLOR.otro;
+  const col = colorPin(p);
   const base = p.cat === 'basicos';
   if(base){
     L.circleMarker([p.lat, p.lon], {
