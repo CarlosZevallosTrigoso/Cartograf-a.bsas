@@ -170,6 +170,7 @@
   .leaflet-popup-content{margin:10px 12px; line-height:1.5}
   .pp-nombre{font-weight:600; letter-spacing:.02em}
   .pp-cat{color:var(--accent); font-size:10px; text-transform:uppercase; letter-spacing:.08em}
+  .pp-hora{color:var(--steel); font-size:10px; font-variant-numeric:tabular-nums}
   .pp-nota{color:var(--ink-dim); margin-top:2px}
   .pp-del{
     margin-top:8px; display:inline-block; color:var(--warn); cursor:pointer;
@@ -220,6 +221,8 @@
       <option value="otro">otro</option>
     </select>
     <input id="f-nota" placeholder="nota (opcional)" autocomplete="off">
+    <label>hora</label>
+    <input id="f-hora" type="time" autocomplete="off">
     <div class="btns">
       <button id="f-cancel">cancelar</button>
       <button id="f-ok" class="primary">guardar pin</button>
@@ -337,7 +340,7 @@ function marcador(p, esNuevo, idx){
   const div = document.createElement('div');
   div.innerHTML =
     '<div class="pp-cat">'+esc(p.cat||'otro')+(esNuevo?' · nuevo':'')+'</div>'+
-    '<div class="pp-nombre">'+esc(p.nombre)+'</div>'+
+    '<div class="pp-nombre">'+esc(p.nombre)+(p.hora?' <span class="pp-hora">'+esc(p.hora)+'</span>':'')+'</div>'+
     (p.nota ? '<div class="pp-nota">'+esc(p.nota)+'</div>' : '')+
     '<a class="pp-del" style="color:#6f8ba3;text-decoration:none" target="_blank" rel="noopener" '+
     'href="https://maps.google.com/?q='+p.lat+','+p.lon+'">→ maps</a>';
@@ -352,6 +355,10 @@ function marcador(p, esNuevo, idx){
   refs.push({p, m, esNuevo});
 }
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function horaActual(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
 function aviso(txt, ms){
   const n = $('note'); n.textContent = txt; n.style.display = 'block';
   clearTimeout(aviso.t); aviso.t = setTimeout(()=>{ n.style.display='none'; }, ms||5000);
@@ -386,6 +393,7 @@ $('f-ok').addEventListener('click', ()=>{
   nuevos.push({
     nombre, cat: $('f-cat').value,
     nota: $('f-nota').value.trim() || undefined,
+    hora: $('f-hora').value || undefined,
     lat: +pendiente.lat.toFixed(6), lon: +pendiente.lng.toFixed(6)
   });
   guardarNuevos(); pintar();
@@ -504,6 +512,7 @@ function buscar(){
           map.flyTo([lat, lon], 17, {duration:.7});
           pendiente = {lat, lng: lon};
           $('f-nombre').value = nombre; $('f-nota').value = '';
+          $('f-hora').value = horaActual();
           $('form').classList.add('on');
         });
         rows.appendChild(div);
@@ -524,6 +533,7 @@ $('mapear').addEventListener('click', ()=>{
 $('pinhere').addEventListener('click', ()=>{
   pendiente = map.getCenter();
   $('f-nombre').value = ''; $('f-nota').value = '';
+  $('f-hora').value = horaActual();
   $('form').classList.add('on');
   $('f-nombre').focus();
 });
