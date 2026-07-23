@@ -161,6 +161,34 @@
   }
   body.mapear #pinhere{display:block}
 
+  /* línea de tiempo */
+  #tl{
+    position:fixed; left:12px; right:12px; z-index:1100;
+    bottom:calc(env(safe-area-inset-bottom) + 12px);
+    background:#1f2017f2; border:1px solid var(--line); border-radius:2px;
+    padding:10px 12px; display:none; flex-direction:column; gap:8px;
+    backdrop-filter:blur(8px);
+  }
+  body.tl #tl{display:flex}
+  body.tl #tab{display:none}
+  #tl-label{
+    color:var(--ink); font-size:11px; letter-spacing:.03em;
+    min-height:14px; font-variant-numeric:tabular-nums;
+  }
+  #tl-label b{color:var(--accent); font-weight:600}
+  .tl-row{display:flex; align-items:center; gap:10px}
+  .tl-row button{
+    font-family:var(--mono); font-size:13px; background:#12130c; color:var(--ink);
+    border:1px solid var(--line); border-radius:2px;
+    min-width:42px; min-height:38px; cursor:pointer;
+  }
+  .tl-row button:active{border-color:var(--accent)}
+  #tl-play.on{background:var(--accent-dim); border-color:var(--accent-dim); color:#0e0f08; font-weight:600}
+  #tl-range{
+    flex:1; height:38px; accent-color:var(--accent);
+    background:transparent; cursor:pointer;
+  }
+
   /* popups leaflet, adaptados */
   .leaflet-popup-content-wrapper{
     background:#1f2017; color:var(--ink); border:1px solid var(--line);
@@ -191,6 +219,7 @@
     <button id="loc" title="mi ubicación">◉ ubicar</button>
     <button id="mapear" title="modo mapear">✕ mapear</button>
     <button id="share" title="compartir coordenadas">coords</button>
+    <button id="tiempo" title="línea de tiempo">⏱</button>
     <button id="exp" title="exportar JSON">↓ json</button>
   </div>
 
@@ -221,11 +250,23 @@
       <option value="otro">otro</option>
     </select>
     <input id="f-nota" placeholder="nota (opcional)" autocomplete="off">
+    <label>fecha</label>
+    <input id="f-fecha" type="date" autocomplete="off">
     <label>hora</label>
     <input id="f-hora" type="time" autocomplete="off">
     <div class="btns">
       <button id="f-cancel">cancelar</button>
       <button id="f-ok" class="primary">guardar pin</button>
+    </div>
+  </div>
+
+  <div id="tl">
+    <div id="tl-label">línea de tiempo</div>
+    <div class="tl-row">
+      <button id="tl-play" title="reproducir">▶</button>
+      <input id="tl-range" type="range" min="0" max="0" value="0" step="1">
+      <button id="tl-speed" title="velocidad">1×</button>
+      <button id="tl-x" title="cerrar">✕</button>
     </div>
   </div>
 
@@ -343,7 +384,7 @@ function marcador(p, esNuevo, idx){
   const div = document.createElement('div');
   div.innerHTML =
     '<div class="pp-cat">'+esc(p.cat||'otro')+(esNuevo?' · nuevo':'')+'</div>'+
-    '<div class="pp-nombre">'+esc(p.nombre)+(p.hora?' <span class="pp-hora">'+esc(p.hora)+'</span>':'')+'</div>'+
+    '<div class="pp-nombre">'+esc(p.nombre)+(cuando(p)?' <span class="pp-hora">'+esc(cuando(p))+'</span>':'')+'</div>'+
     (p.nota ? '<div class="pp-nota">'+esc(p.nota)+'</div>' : '')+
     '<a class="pp-del" style="color:#6f8ba3;text-decoration:none" target="_blank" rel="noopener" '+
     'href="https://maps.google.com/?q='+p.lat+','+p.lon+'">→ maps</a>';
@@ -361,6 +402,20 @@ function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 function horaActual(){
   const d = new Date();
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function fechaActual(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function fmtFecha(f){
+  const parts = String(f).split('-');
+  if(parts.length !== 3) return f;
+  const mes = MESES[(+parts[1])-1] || '';
+  return (+parts[2]) + ' ' + mes;
+}
+function cuando(p){
+  return [p.fecha ? fmtFecha(p.fecha) : '', p.hora || ''].filter(Boolean).join(' · ');
 }
 function aviso(txt, ms){
   const n = $('note'); n.textContent = txt; n.style.display = 'block';
@@ -396,6 +451,7 @@ $('f-ok').addEventListener('click', ()=>{
   nuevos.push({
     nombre, cat: $('f-cat').value,
     nota: $('f-nota').value.trim() || undefined,
+    fecha: $('f-fecha').value || undefined,
     hora: $('f-hora').value || undefined,
     lat: +pendiente.lat.toFixed(6), lon: +pendiente.lng.toFixed(6)
   });
@@ -515,7 +571,7 @@ function buscar(){
           map.flyTo([lat, lon], 17, {duration:.7});
           pendiente = {lat, lng: lon};
           $('f-nombre').value = nombre; $('f-nota').value = '';
-          $('f-hora').value = horaActual();
+          $('f-fecha').value = fechaActual(); $('f-hora').value = horaActual();
           $('form').classList.add('on');
         });
         rows.appendChild(div);
@@ -536,9 +592,92 @@ $('mapear').addEventListener('click', ()=>{
 $('pinhere').addEventListener('click', ()=>{
   pendiente = map.getCenter();
   $('f-nombre').value = ''; $('f-nota').value = '';
-  $('f-hora').value = horaActual();
+  $('f-fecha').value = fechaActual(); $('f-hora').value = horaActual();
   $('form').classList.add('on');
   $('f-nombre').focus();
+});
+
+// ---------- línea de tiempo ----------
+let tlOn = false, tlList = [], tlIdx = 0, tlPlaying = false, tlTimer = null, tlLayer = null, tlVel = 1;
+function tlClave(p){ return (p.fecha || '0000-00-00') + 'T' + (p.hora || '00:00'); }
+function tlEntrar(){
+  tlList = semilla.concat(nuevos).filter(p => valido(p) && p.hora)
+    .sort((a,b) => tlClave(a).localeCompare(tlClave(b)));
+  if(!tlList.length){ aviso('No hay pines con hora para la línea de tiempo. Crea pines con hora.'); return; }
+  tlOn = true; tlIdx = 0; tlVel = 1;
+  document.body.classList.add('tl');
+  document.body.classList.remove('mapear'); $('mapear').classList.remove('on');
+  $('list').classList.remove('on'); $('form').classList.remove('on');
+  $('tiempo').classList.add('on');
+  map.removeLayer(capa);
+  tlLayer = L.layerGroup().addTo(map);
+  map.fitBounds(L.latLngBounds(tlList.map(p => [p.lat, p.lon])).pad(0.2));
+  $('tl-range').min = 0; $('tl-range').max = tlList.length - 1; $('tl-range').value = 0;
+  $('tl-speed').textContent = '1×';
+  tlPintar();
+}
+function tlSalir(){
+  tlPausa();
+  tlOn = false;
+  document.body.classList.remove('tl');
+  $('tiempo').classList.remove('on');
+  if(tlLayer){ map.removeLayer(tlLayer); tlLayer = null; }
+  capa.addTo(map);
+}
+function tlPintar(){
+  if(!tlLayer) return;
+  tlLayer.clearLayers();
+  const pts = [];
+  for(let i=0; i<=tlIdx && i<tlList.length; i++) pts.push([tlList[i].lat, tlList[i].lon]);
+  if(pts.length > 1){
+    L.polyline(pts, {color:'#8fa676', weight:2, opacity:.5, dashArray:'5 5'}).addTo(tlLayer);
+  }
+  for(let i=0; i<=tlIdx && i<tlList.length; i++){
+    const p = tlList[i], actual = (i === tlIdx), col = colorPin(p);
+    const mk = L.circleMarker([p.lat, p.lon], {
+      radius: actual ? 11 : 6, color: col, weight: actual ? 3 : 2,
+      fillColor: col, fillOpacity: actual ? .95 : .45
+    }).addTo(tlLayer);
+    mk.bindPopup('<div class="pp-nombre">'+esc(p.nombre)+'</div>'+
+      (cuando(p) ? '<div class="pp-hora">'+esc(cuando(p))+'</div>' : ''), {autoPan:false});
+    if(actual) mk.openPopup();
+  }
+  const cur = tlList[tlIdx];
+  if(cur){
+    $('tl-label').innerHTML = '<b>'+esc(cuando(cur))+'</b> · '+esc(cur.nombre)+
+      '  ('+(tlIdx+1)+'/'+tlList.length+')';
+    map.panTo([cur.lat, cur.lon], {animate:true, duration:.6});
+  }
+  $('tl-range').value = tlIdx;
+}
+function tlPaso(){
+  if(!tlPlaying) return;
+  if(tlIdx >= tlList.length - 1){ tlPausa(); return; }
+  tlIdx++; tlPintar();
+  if(tlIdx >= tlList.length - 1){ tlPausa(); return; }
+  tlTimer = setTimeout(tlPaso, 1500 / tlVel);
+}
+function tlPlay(){
+  if(tlIdx >= tlList.length - 1) tlIdx = -1; // reiniciar si está al final
+  tlPlaying = true;
+  $('tl-play').textContent = '❚❚'; $('tl-play').classList.add('on');
+  tlPaso();
+}
+function tlPausa(){
+  tlPlaying = false; clearTimeout(tlTimer);
+  $('tl-play').textContent = '▶'; $('tl-play').classList.remove('on');
+}
+$('tiempo').addEventListener('click', ()=>{ tlOn ? tlSalir() : tlEntrar(); });
+$('tl-x').addEventListener('click', tlSalir);
+$('tl-play').addEventListener('click', ()=>{ tlPlaying ? tlPausa() : tlPlay(); });
+$('tl-range').addEventListener('input', ()=>{
+  tlPausa();
+  tlIdx = +$('tl-range').value;
+  tlPintar();
+});
+$('tl-speed').addEventListener('click', ()=>{
+  tlVel = tlVel === 1 ? 2 : (tlVel === 2 ? 0.5 : 1);
+  $('tl-speed').textContent = (tlVel === 0.5 ? '½' : tlVel) + '×';
 });
 
 // ---------- convención: título recarga ----------
